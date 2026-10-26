@@ -1,0 +1,38 @@
+pro 5A
+
+import nltk
+from nltk.util import ngrams
+nltk.download('punkt')
+nltk.download('punkt_tab')
+text="natural language processing is an interesting subject"
+tokens=nltk.word_tokenize(text)
+for i in range (1,4):
+    print("\n",i,"-grans:")
+    n_grams=ngrams(tokens,i)
+    for gram in n_grams:
+        print(gram)
+
+
+pro 5B 
+
+
+from collections import Counter
+corpus = ["this is my cat", "this is my dog", "i love my cat", "that is my cat"]
+def readData(corpus):
+    return [w for s in corpus for w in s.lower().split()]
+def createBigram(words):
+    bigrams = list(zip(words[:-1], words[1:]))
+    return Counter(bigrams), Counter(words)
+def calcBigramProb(w1, w2, bi_counts, uni_counts):
+    return bi_counts[(w1, w2)] / uni_counts[w1] if uni_counts[w1] else 0.0
+bi_counts, uni_counts = createBigram(readData(corpus))
+test_words = "This is my cat".lower().split()
+test_bigrams = list(zip(test_words[:-1], test_words[1:]))
+prob = 1.0
+for w1, w2 in test_bigrams:
+    p = calcBigramProb(w1, w2, bi_counts, uni_counts)
+    print(f"P({w2} | {w1}) = {p:.4f}")
+    prob *= p
+print(f"\nFinal Probability: {prob:.4f}")
+if prob == 0:
+    print("A probability of 0 illustrates the data sparsity problem.")
